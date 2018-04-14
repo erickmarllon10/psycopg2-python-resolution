@@ -2,8 +2,6 @@ import sys
 import psycopg2
 from Usuarios.Usuarios import listar_admin
 
-# Branch Testing 
-
 def cadastrar_servidor():
     print "------------------------------------"
     print "------ Cadastro de Servidores ------"
