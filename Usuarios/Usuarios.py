@@ -27,18 +27,35 @@ def cadastrar_usuario():
 
 def acessar_sistema():
     print "Acessando sistema"
-    nome = raw_input("Digite o nome de acesso: ")
-    senha = raw_input("Digite a senha de acesso: ")
+    nome = raw_input("Digite o seu login: ")
+    senha = raw_input("Digite a sua senha: ")
     try:
         con = psycopg2.connect("host=127.0.0.1 dbname=onxenti user=onxentiadmin password=123456")
         cur = con.cursor()
-        sql = "select * from users where login_access = (%s) and passwd = (%s)"
-        cred = (nome, senha)
-        cur.execute(sql, cred)
+        cur.execute("select * from users where login_access = '%s'"%nome)
         if cur.fetchone() == None:
-            print "Acesso negado"
+            print "Usuario incorreto."
         else:
-            print "Autenticado com sucesso"
+            cur.execute("select * from users where passwd = '%s'"%senha)
+            count = 1
+            while count <=4:
+                if cur.fetchone() == None:
+                    senha = raw_input("Senha incorreta. Digite novamente ou s para \"esqueci a senha\" (tentativa %s de 3): "%count)
+                    if senha == 's':
+                        resposta = raw_input("qual o seu local de nascimento? ")
+                        if resposta != 'recife':
+                            print "Resposta incorreta!"
+                        else:
+                            cur.execute("select passwd from users where login_access = '%s'"%nome)
+                            for l in cur.fetchone():
+                                print "Sua senha e",l
+                    else:
+                        cur.execute("select * from users where passwd = '%s'"%senha)
+                        count += 1
+                else:
+                    print "Autenticado com sucesso"
+                    break
+
     except Exception as e:
         print "Erro: "%e
     finally:
