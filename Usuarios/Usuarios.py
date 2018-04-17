@@ -36,7 +36,7 @@ def acessar_sistema():
         if cur.fetchone() == None:
             print "Usuario incorreto."
         else:
-            cur.execute("select * from users where passwd = '%s'"%senha)
+            cur.execute("select * from users where login_access = '%s' and passwd = '%s'"%(nome, senha))
             count = 1
             while count <=4:
                 if cur.fetchone() == None:
@@ -50,7 +50,7 @@ def acessar_sistema():
                             for l in cur.fetchone():
                                 print "Sua senha e",l
                     else:
-                        cur.execute("select * from users where passwd = '%s'"%senha)
+                        cur.execute("select * from users where login_access = '%s' and passwd = '%s'"%(nome, senha))
                         count += 1
                 else:
                     print "Autenticado com sucesso"
